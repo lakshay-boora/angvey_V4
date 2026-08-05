@@ -3,7 +3,7 @@
 **Your personal AI agent that thinks, decides, and delivers real automations.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Go](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go)](https://go.dev/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
 [![Status](https://img.shields.io/badge/Status-Active%20Development-brightgreen)](https://github.com/lakshay-boora/angvey_V4)
 [![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red)](https://github.com/lakshay-boora/angvey_V4)
 
@@ -15,26 +15,30 @@
 ## What is Angvey V4?
 
 Angvey V4 is an open-source personal AI agent runtime.  
-It goes beyond chat: it reasons, plans multi-step workflows, builds missing tools on the fly, remembers context, and executes real automations — all while staying under your control.
+It goes beyond chat: it reasons, plans multi-step workflows, uses tools, remembers context, and executes real automations — all while staying under your control.
 
-Key goals:
-- Local-first / privacy-respecting where possible
-- Multi-provider LLM support
-- Self-improving tool generation
-- Clean, auditable, contribution-friendly codebase
+**Design principles**
+- Local-first & privacy-respecting
+- Multi-provider (Ollama, OpenAI, any OpenAI-compatible endpoint)
+- Clean, readable, contribution-friendly code
+- Safe by default (sandbox levels + command blocklist)
+- Extensible via plugins
 
 ---
 
-## Features
+## Features (current scaffold + roadmap)
 
-- **Autonomous tool creation** – Missing capabilities are generated, tested, and reused
-- **Multi-step reasoning & planning**
-- **Long-term memory & session management**
-- **Scheduling & recurring automations**
-- **MCP (Model Context Protocol) client & server support**
-- **Multi-LLM providers** (Claude, OpenAI, Gemini, Grok, local models, etc.)
-- **Sandbox execution** for safety
-- **Extensible skill / plugin system**
+| Area | Status |
+|------|--------|
+| ReAct agent loop | Scaffold ready |
+| Multi-provider support | Planned (Ollama / OpenAI / local) |
+| Built-in tools (shell, files, web, memory) | Registry ready |
+| Persistent memory | Designed |
+| Plugin system | Designed |
+| Telegram channel | Optional |
+| Sandbox levels | Configured |
+| MCP support | Roadmap |
+| Tool market / skill sharing | Roadmap |
 
 ---
 
@@ -45,30 +49,54 @@ Key goals:
 git clone https://github.com/lakshay-boora/angvey_V4.git
 cd angvey_V4
 
-# Build (example)
-make build   # or go build ./...
+# Install (editable)
+pip install -e .
+
+# Copy example config
+mkdir -p ~/.angvey
+cp config.example.json ~/.angvey/config.json
 
 # Run
-./angvey --help
+angvey --help
+angvey init
+angvey chat
+angvey status
 ```
 
-> Detailed installation, configuration, and provider setup will be documented in `/docs` as the project matures.
+> The core agent loop, providers and full tool handlers are being completed. The scaffold is already structured for rapid iteration.
 
 ---
 
-## Project Structure (planned)
+## Project Structure
 
 ```
 angvey_V4/
-├── cmd/                 # CLI entrypoints
-├── internal/            # Core agent logic
-├── pkg/                 # Public packages
-├── skills/              # Loadable skills
-├── docs/                # Documentation
-├── examples/            # Usage examples
+├── src/angvey/
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── cli.py              # Click CLI (init, chat, status)
+│   ├── config.py           # Typed configuration
+│   └── agent/
+│       ├── __init__.py
+│       ├── loop.py         # ReAct agent loop
+│       └── tools.py        # Built-in tool registry
+├── config.example.json
+├── pyproject.toml
+├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
 ```
+
+---
+
+## Configuration
+
+See `config.example.json`. Key paths after setup:
+
+- Config    → `~/.angvey/config.json`
+- Workspace → `~/.angvey/workspace/`
+- Memory    → `~/.angvey/memory.json`
+- Plugins   → `~/.angvey/plugins/`
 
 ---
 
@@ -79,11 +107,9 @@ We welcome contributions of all kinds!
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+4. Push and open a Pull Request
 
-Please open an issue first for large changes.  
-Code of Conduct and contribution guidelines will live in `CONTRIBUTING.md`.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
@@ -98,60 +124,40 @@ Copyright (c) 2026 lakshay-boora / Angvey International
 ## Open Source Credits & Acknowledgments
 
 Angvey V4 stands on the shoulders of many excellent open-source projects.  
-We gratefully acknowledge the following (non-exhaustive list of libraries, frameworks, protocols, and tools commonly used or inspired by in this space):
+We gratefully acknowledge (non-exhaustive):
 
-### Core Runtime & Language
-- **Go** – https://go.dev/ (The Go Programming Language)
-- **bubblewrap / sandbox-exec** – Secure sandboxing on Linux/macOS
+### Core & Runtime
+- **Python** · **httpx** · **Click** · **Rich**
 
 ### AI / Agent Ecosystem
-- **Model Context Protocol (MCP)** – Anthropic & community (https://modelcontextprotocol.io)
-- **LangChain / LangGraph** – Inspiration for agent orchestration patterns
-- **AutoGen / CrewAI / Semantic Kernel** – Multi-agent design ideas
-- **OpenAI Python/Node SDKs**, **Anthropic SDK**, **Google Generative AI SDK**, **xAI Grok SDK**
-- **Ollama** – Local model serving
-- **llama.cpp / ggml** – Efficient local inference
+- **Model Context Protocol (MCP)**
+- **Ollama** · **llama.cpp**
+- **LangChain / LangGraph** (orchestration patterns)
+- **OpenAI / Anthropic / Google / xAI SDKs**
 
-### Tooling & Infrastructure
-- **Cobra / Viper** – CLI and configuration (Go)
-- **Bubble Tea / Lip Gloss** – Beautiful terminal UIs
-- **Docker / Podman** – Containerized tool execution
-- **cron / systemd timers** – Scheduling foundations
-- **SQLite / DuckDB / KuraDB-style stores** – Lightweight memory & RAG
-- **Playwright / Puppeteer** – Browser automation tools
-- **pdftotext (poppler)** – Document parsing
+### Inspiration & Related Agents
+- **agent-mini** (clean local-first design)
+- **Agenvoy** · **OpenHands** · **Aider** · **Continue**
+- **Angy** · **MyAgentive** · **Aivy OS** and the wider open-source agent community
 
-### Protocols & Standards
-- **OpenAPI / Swagger**
-- **JSON Schema**
-- **gRPC / Connect**
-- **Server-Sent Events (SSE)** for streaming
+### Infrastructure
+- **Docker / Podman** · **SQLite** · **Playwright** · **GitHub**
 
-### Inspiration & Related Open-Source Agents
-- **Agenvoy** – Local AI agent that builds its own tools
-- **OpenDevin / OpenHands**
-- **SWE-agent**
-- **Aider**
-- **Continue.dev**
-- **Cursor / Claude Code patterns** (open-source analogues)
-- **Angy**, **MyAgentive**, **Aivy OS**, and many other community agent projects
-
-### Documentation & Community
-- **GitHub** – Hosting, issues, PRs, Actions
-- **Markdown**, **MkDocs / Docusaurus** style documentation patterns
-- All the individual maintainers and contributors of the projects listed above
-
-If you use Angvey V4 and build on top of these projects, please also respect their respective licenses.
+If you build on these projects, please respect their respective licenses.
 
 ---
 
-## Roadmap (high level)
+## Roadmap
 
-- [ ] Stable core agent loop
-- [ ] First-class MCP support
-- [ ] Tool market / skill sharing
-- [ ] Web dashboard
-- [ ] Cross-platform installers
+- [x] Professional open-source scaffold
+- [x] CLI + config + agent loop skeleton
+- [x] Tool registry
+- [ ] Full provider implementations (Ollama, OpenAI, local)
+- [ ] Real tool handlers + sandbox
+- [ ] Persistent memory + sessions
+- [ ] Plugin loader
+- [ ] Telegram gateway
+- [ ] MCP client/server
 - [ ] Official launch (target: late 2026)
 
 ---
