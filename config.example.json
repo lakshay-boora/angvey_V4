@@ -1,0 +1,41 @@
+{
+  "provider": "ollama",
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434",
+      "model": "llama3.1",
+      "think": false
+    },
+    "openai": {
+      "apiKey": "",
+      "model": "gpt-4o"
+    },
+    "local": {
+      "baseUrl": "http://localhost:8080/v1",
+      "apiKey": "no-key",
+      "model": "local-model"
+    }
+  },
+  "agent": {
+    "maxIterations": 25,
+    "temperature": 0.7,
+    "systemPrompt": ""
+  },
+  "tools": {
+    "sandboxLevel": "workspace",
+    "blockedCommands": ["rm -rf /", "sudo", "mkfs", "dd if="]
+  },
+  "memory": {
+    "enabled": true,
+    "maxEntries": 2000
+  },
+  "workspace": "~/.angvey/workspace",
+  "channels": {
+    "telegram": {
+      "enabled": false,
+      "token": "",
+      "allowFrom": [],
+      "streamResponses": true
+    }
+  }
+}
