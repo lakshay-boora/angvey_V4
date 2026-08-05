@@ -1,0 +1,56 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+angvey
+agen
+*.test
+*.out
+
+# Build artifacts
+/bin/
+/dist/
+/build/
+*.o
+*.a
+
+# Go
+/vendor/
+go.work
+go.work.sum
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment & secrets
+.env
+.env.*
+*.pem
+*.key
+config.local.json
+*.secret
+
+# Runtime / local data
+*.log
+*.db
+*.sqlite
+*.sqlite3
+/tmp/
+/data/
+/memory/
+/skills/local/
+
+# Coverage & test
+coverage.out
+coverage.html
+*.cover
+
+# OS
+Thumbs.db
